@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activo Inmobiliario R-3 Valledupar - Scroll-Driven</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --navy: #123B67;
+            --teal: #2ba5a5;
+            --text-gray: #5a6b7d;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #000;
+            color: white;
+        }
+
+        /* FRAMES BACKGROUND - FULL SCREEN FIXED */
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: 1;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .frame-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .frame-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* CONTENT SCROLLABLE */
+        .content-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            z-index: 10;
+            scroll-behavior: auto;
+        }
+
+        .content-wrapper::-webkit-scrollbar {
+            display: none;
+        }
+
+        .content-wrapper {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* NAVBAR */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(18, 59, 103, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .nav-brand {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .nav-cta {
+            background: var(--navy);
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .nav-cta:hover {
+            background: #0d2849;
+        }
+
+        /* SECTIONS */
+        section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 0 5vw;
+            padding-top: 80px;
+        }
+
+        .card {
+            width: 32vw;
+            min-width: 420px;
+            max-width: 560px;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 28px;
+            padding: 3.5rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.22);
+            animation: cardFadeIn 0.8s ease-out;
+        }
+
+        @keyframes cardFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        section h2 {
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            font-weight: 700;
+        }
+
+        section p {
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.9rem 1.8rem;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--navy);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0d2849;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.2rem;
+            margin: 1.5rem 0;
+        }
+
+        .kpi-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 1.5rem;
+            text-align: center;
+            border-radius: 16px;
+        }
+
+        .kpi-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+            color: var(--teal);
+        }
+
+        .kpi-label {
+            font-size: 0.85rem;
+            opacity: 0.85;
+        }
+
+        .value-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.2rem;
+            margin: 1.5rem 0;
+        }
+
+        .value-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 1.5rem;
+            border-radius: 16px;
+        }
+
+        .value-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+            font-weight: 700;
+        }
+
+        .value-card p {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            opacity: 0.9;
+            margin: 0;
+        }
+
+        .location-map {
+            width: 100%;
+            height: 280px;
+            border-radius: 16px;
+            overflow: hidden;
+            margin: 1.5rem 0;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .location-map img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .location-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .location-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .location-icon {
+            width: 20px;
+            height: 20px;
+            background: var(--teal);
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .location-item p {
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .gallery-item {
+            border-radius: 16px;
+            overflow: hidden;
+            aspect-ratio: 1/1;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .gallery-label {
+            position: absolute;
+            bottom: 0.75rem;
+            left: 0.75rem;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .documents-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .document-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 1.2rem;
+            text-align: center;
+            border-radius: 16px;
+        }
+
+        .document-icon {
+            font-size: 2.2rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .document-card h3 {
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        .document-card a {
+            color: var(--teal);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .contact-form {
+            margin: 1.5rem 0;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            padding: 0.8rem;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            color: white;
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-submit {
+            width: 100%;
+            padding: 1rem;
+            background: var(--navy);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 0.75rem;
+        }
+
+        .contact-info {
+            text-align: center;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            font-size: 0.9rem;
+        }
+
+        footer {
+            position: relative;
+            z-index: 10;
+            background: rgba(18, 59, 103, 0.5);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            font-size: 0.85rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @media (max-width: 1024px) {
+            section {
+                padding: 1.5rem;
+                justify-content: center;
+            }
+
+            .card {
+                width: 100%;
+                min-width: auto;
+            }
+
+            section h2 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- FRAMES BACKGROUND -->
+    <div class="video-background">
+        <div class="frame-container">
+            <img id="frameImage" class="frame-image" src="assets/frames/frame-0001.jpg" alt="Frame">
+        </div>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav>
+        <div class="nav-brand">Activo R-3 Valledupar</div>
+        <a href="javascript:void(0)" class="nav-cta" onclick="scrollToSection('contacto')">Contactar</a>
+    </nav>
+
+    <!-- CONTENT WRAPPER -->
+    <div class="content-wrapper">
+
+        <!-- HERO: 0-10% -->
+        <section id="hero">
+            <div class="card">
+                <h2>34,453 m² | Activo para desarrollo R-3</h2>
+                <p>Suelo urbanizable con concepto normativo vigente, infraestructura consolidada y viabilidad confirmada. Una oportunidad única para transformar el espacio urbano de Valledupar.</p>
+                <div class="button-group">
+                    <a href="javascript:void(0)" class="btn btn-primary" onclick="scrollToSection('contacto')">Solicitar información</a>
+                    <a href="javascript:void(0)" class="btn btn-secondary" onclick="scrollToSection('normativa')">Especificaciones</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- INDICADORES: 10-20% -->
+        <section id="indicadores">
+            <div class="card">
+                <h2>Indicadores clave</h2>
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-number">34,453</div>
+                        <div class="kpi-label">m²</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-number">R-3</div>
+                        <div class="kpi-label">Zona</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-number">$335k</div>
+                        <div class="kpi-label">/m²</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-number">0.35</div>
+                        <div class="kpi-label">I.O.</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-number">2.0</div>
+                        <div class="kpi-label">I.C.</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-number">✓</div>
+                        <div class="kpi-label">Libre</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- UBICACIÓN: 20-35% -->
+        <section id="ubicacion">
+            <div class="card">
+                <h2>Ubicación estratégica</h2>
+                <div class="location-map">
+                    <img src="assets/foto/lote-ortho-mapa.png" alt="Mapa">
+                </div>
+                <div class="location-list">
+                    <div class="location-item">
+                        <div class="location-icon"></div>
+                        <p>5 minutos del Centro</p>
+                    </div>
+                    <div class="location-item">
+                        <div class="location-icon"></div>
+                        <p>Hospitales cercanos</p>
+                    </div>
+                    <div class="location-item">
+                        <div class="location-icon"></div>
+                        <p>Universidades</p>
+                    </div>
+                    <div class="location-item">
+                        <div class="location-icon"></div>
+                        <p>Terminal de transportes</p>
+                    </div>
+                    <div class="location-item">
+                        <div class="location-icon"></div>
+                        <p>Policía Metropolitana</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VALOR: 35-55% -->
+        <section id="valor">
+            <div class="card">
+                <h2>¿Por qué este activo?</h2>
+                <div class="value-grid">
+                    <div class="value-card">
+                        <h3>Frente completo</h3>
+                        <p>Acceso desde vías principales con alto flujo vehicular.</p>
+                    </div>
+                    <div class="value-card">
+                        <h3>Barrio consolidado</h3>
+                        <p>Infraestructura de servicios completamente desarrollada.</p>
+                    </div>
+                    <div class="value-card">
+                        <h3>Servicios listos</h3>
+                        <p>Agua, luz, alcantarillado disponibles.</p>
+                    </div>
+                    <div class="value-card">
+                        <h3>Geometría eficiente</h3>
+                        <p>Forma regular para urbanización óptima.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- POTENCIAL: 55-75% -->
+        <section id="potencial">
+            <div class="card">
+                <h2>Potencial de desarrollo</h2>
+                <p>Con los índices R-3 permitidos, este activo puede alojar entre 500–700 unidades residenciales complementadas con espacios comerciales y servicios.</p>
+            </div>
+        </section>
+
+        <!-- NORMATIVA: 75-90% -->
+        <section id="normativa">
+            <div class="card">
+                <h2>Marco normativo</h2>
+                <p>Concepto de Norma Urbana OAPM-3041-2026. Sector Normativo 23, Comuna 2. Clasificación R-3 con Tratamiento Urbanístico de Desarrollo.</p>
+                <div class="documents-grid">
+                    <div class="document-card">
+                        <div class="document-icon">📋</div>
+                        <h3>Concepto urbanístico</h3>
+                        <a href="#" onclick="alert('Disponible'); return false;">Descargar</a>
+                    </div>
+                    <div class="document-card">
+                        <div class="document-icon">🗺️</div>
+                        <h3>Plano catastral</h3>
+                        <a href="#" onclick="alert('Disponible'); return false;">Descargar</a>
+                    </div>
+                    <div class="document-card">
+                        <div class="document-icon">✓</div>
+                        <h3>Clasificación R-3</h3>
+                        <a href="#" onclick="alert('Disponible'); return false;">Descargar</a>
+                    </div>
+                    <div class="document-card">
+                        <div class="document-icon">📄</div>
+                        <h3>Libertad y tradición</h3>
+                        <a href="#" onclick="alert('Disponible'); return false;">Descargar</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACTO: 90-100% -->
+        <section id="contacto">
+            <div class="card">
+                <h2>¿Interesado?</h2>
+                <p>Completa el formulario y nos pondremos en contacto para discutir la oportunidad en detalle.</p>
+                <form class="contact-form" onsubmit="handleSubmit(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Nombre</label>
+                            <input type="text" name="nombre" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" name="email" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Teléfono</label>
+                            <input type="tel" name="telefono" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Empresa</label>
+                            <input type="text" name="empresa">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Mensaje</label>
+                            <textarea name="mensaje" required></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" class="form-submit">Enviar consulta</button>
+                </form>
+                <div class="contact-info">
+                    <p>galkiewicz1@hotmail.com</p>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>&copy; 2026 Activo inmobiliario para desarrollo R-3 en Valledupar, Cesar.</p>
+        </footer>
+
+    </div>
+
+    <script>
+        const frameImage = document.getElementById('frameImage');
+        const wrapper = document.querySelector('.content-wrapper');
+        const totalFrames = 240; // Número total de frames
+        
+        let lastScroll = 0;
+
+        // FRAME-BASED SCROLL SCRUBBING
+        wrapper.addEventListener('scroll', () => {
+            const docHeight = wrapper.scrollHeight - wrapper.clientHeight;
+            const scrollPercent = wrapper.scrollTop / docHeight;
+            
+            // Calcular frame basado en porcentaje de scroll
+            const frameIndex = Math.round(scrollPercent * (totalFrames - 1));
+            const paddedFrame = String(frameIndex + 1).padStart(4, '0');
+            
+            // Cambiar imagen
+            frameImage.src = `assets/frames/frame-${paddedFrame}.jpg`;
+        }, { passive: true });
+
+        // FORM SUBMIT
+        function handleSubmit(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const data = {
+                nombre: formData.get('nombre'),
+                email: formData.get('email'),
+                telefono: formData.get('telefono'),
+                empresa: formData.get('empresa'),
+                mensaje: formData.get('mensaje')
+            };
+
+            const mailtoLink = `mailto:galkiewicz1@hotmail.com?subject=Consulta - ${data.nombre}&body=Nombre: ${data.nombre}%0AEmail: ${data.email}%0ATelefono: ${data.telefono}%0AEmpresa: ${data.empresa}%0A%0AMensaje:%0A${data.mensaje}`;
+            
+            window.location.href = mailtoLink;
+            alert('Consulta enviada');
+            e.target.reset();
+        }
+
+        // SCROLL TO SECTION
+        function scrollToSection(id) {
+            const section = document.getElementById(id);
+            if (section) {
+                const rect = section.getBoundingClientRect();
+                wrapper.scrollBy({ top: rect.top, behavior: 'smooth' });
+            }
+        }
+
+        // Precargar primer frame
+        frameImage.addEventListener('load', () => {
+            console.log('✅ Frames cargados y listos');
+        });
+    </script>
+
+</body>
+</html>
